@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ArrowLeft } from "lucide-react";
+import type { Metadata } from "next";
 
 interface PokemonResult {
   imageUrl: string;
@@ -49,6 +50,63 @@ async function generatePokemon(
     console.error("Error generating Pokemon:", error);
     return null;
   }
+}
+
+// Generar metadata dinámico para Open Graph
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ username: string }>;
+}): Promise<Metadata> {
+  const { username } = await params;
+  
+  // Generar el Pokémon para obtener la información
+  const pokemonResult = await generatePokemon(username);
+  
+  if (!pokemonResult) {
+    return {
+      title: "Pokemon not found | v0mon",
+      description: "This Pokemon could not be generated.",
+    };
+  }
+
+  const title = `${pokemonResult.pokemonName} | @${username} | v0mon`;
+  const description = pokemonResult.description || 
+    `Meet ${pokemonResult.pokemonName}, a unique Pokemon created for @${username}!`;
+  
+  // Construir la URL de la imagen OG personalizada (solo necesita username)
+  const ogImageUrl = `https://v0mon.vercel.app/api/og?username=${encodeURIComponent(username)}`;
+  
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      url: `https://v0mon.vercel.app/${username}`,
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: `${pokemonResult.pokemonName} - Pokemon for @${username}`,
+        },
+      ],
+      siteName: "v0mon",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [ogImageUrl],
+      creator: "@v0mon",
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
+  };
 }
 
 // Esta función se ejecuta en build time y cuando se visita por primera vez
