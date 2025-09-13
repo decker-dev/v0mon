@@ -12,8 +12,22 @@ export default function Home() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!username.trim()) {
+    
+    const cleanUsername = username.replace("@", "").trim();
+    
+    // Validaciones
+    if (!cleanUsername) {
       setError("Please enter a username");
+      return;
+    }
+    
+    if (cleanUsername.length > 15) {
+      setError("Username must be 15 characters or less");
+      return;
+    }
+    
+    if (!/^[a-zA-Z0-9_]+$/.test(cleanUsername)) {
+      setError("Username can only contain letters, numbers and underscores");
       return;
     }
 
@@ -23,8 +37,7 @@ export default function Home() {
     // Simulate loading for better UX
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    // Clean the username and redirect
-    const cleanUsername = username.replace("@", "");
+    // Redirect with cleaned username
     window.location.href = `/${cleanUsername}`;
   };
 
@@ -63,6 +76,10 @@ export default function Home() {
                 onChange={(e) => setUsername(e.target.value)}
                 className="h-14 text-lg pl-4 pr-4 bg-input focus:border-primary transition-colors"
                 disabled={isLoading}
+                minLength={1}
+                maxLength={15}
+                pattern="^[a-zA-Z0-9_]+$"
+                title="Only letters, numbers and underscores allowed (1-15 characters)"
               />
             </div>
 

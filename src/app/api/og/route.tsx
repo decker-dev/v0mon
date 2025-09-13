@@ -4,6 +4,23 @@ import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
 
+// Función para parsear filename y extraer metadata (misma que en generate-pokemon)
+function parseFilename(filename: string): { username: string, types: string[], pokemonName: string } | null {
+  try {
+    const nameWithoutExt = filename.replace('.png', '');
+    const parts = nameWithoutExt.split('_');
+    
+    if (parts.length !== 3) return null;
+    
+    const [username, typesString, pokemonName] = parts;
+    const types = typesString.split('-');
+    
+    return { username, types, pokemonName };
+  } catch {
+    return null;
+  }
+}
+
 // Función para generar el Pokémon (igual que en la página)
 async function generatePokemon(username: string) {
   try {
