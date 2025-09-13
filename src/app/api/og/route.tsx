@@ -155,13 +155,11 @@ export async function GET(request: Request) {
                 height="600"
                 style={{
                   objectFit: "contain",
-                  borderRadius: "32px",
-                  boxShadow: "0 30px 60px rgba(0, 0, 0, 0.6)",
-                  backgroundColor: "rgba(255, 255, 255, 0.15)",
-                  padding: "30px",
+                  borderRadius: "48px",
+                  padding: "20px",
                 }}
               />
-            </div>
+            </div> 
 
             {/* Lado derecho - Información (más compacto) */}
             <div
