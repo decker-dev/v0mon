@@ -8,6 +8,33 @@ import type { Metadata } from "next";
 import { db, schema } from "@/lib/db/database";
 import { eq } from "drizzle-orm";
 
+// Colores para cada tipo de Pokemon
+const TYPE_COLORS: Record<string, { bg: string; text: string }> = {
+  normal: { bg: "bg-gray-400", text: "text-white" },
+  fire: { bg: "bg-red-500", text: "text-white" },
+  water: { bg: "bg-blue-500", text: "text-white" },
+  electric: { bg: "bg-yellow-400", text: "text-black" },
+  grass: { bg: "bg-green-500", text: "text-white" },
+  ice: { bg: "bg-cyan-300", text: "text-black" },
+  fighting: { bg: "bg-red-700", text: "text-white" },
+  poison: { bg: "bg-purple-500", text: "text-white" },
+  ground: { bg: "bg-yellow-600", text: "text-white" },
+  flying: { bg: "bg-indigo-400", text: "text-white" },
+  psychic: { bg: "bg-pink-500", text: "text-white" },
+  bug: { bg: "bg-green-400", text: "text-white" },
+  rock: { bg: "bg-yellow-800", text: "text-white" },
+  ghost: { bg: "bg-purple-700", text: "text-white" },
+  dragon: { bg: "bg-indigo-700", text: "text-white" },
+  dark: { bg: "bg-gray-800", text: "text-white" },
+  steel: { bg: "bg-gray-500", text: "text-white" },
+  fairy: { bg: "bg-pink-300", text: "text-black" },
+};
+
+// Función para obtener los colores de un tipo
+function getTypeColors(type: string) {
+  return TYPE_COLORS[type.toLowerCase()] || { bg: "bg-gray-400", text: "text-white" };
+}
+
 interface PokemonResult {
   imageUrl: string;
   pokemonName: string;
@@ -18,6 +45,8 @@ interface PokemonResult {
     profileFound: boolean;
   };
   description?: string;
+  type1?: string;
+  type2?: string;
 }
 
 // Función para obtener el Pokémon desde la base de datos o generar uno nuevo
@@ -45,6 +74,8 @@ async function getPokemon(
           profileFound: true,
         },
         description: `This is ${existingPokemon.pokemonName}, a unique Pokemon created for @${existingPokemon.username}`,
+        type1: existingPokemon.type1,
+        type2: existingPokemon.type2 || undefined,
       };
     }
 
@@ -204,8 +235,18 @@ export default async function PokemonPage({
                 <h3 className="text-4xl font-bold">
                   {pokemonResult.pokemonName}
                 </h3>
-                <div className="inline-block px-4 py-2 bg-primary/20 text-primary rounded-full text-sm font-medium">
-                  Inspired by @{pokemonResult.profile.username}
+                {/* Type Badges */}
+                <div className="flex gap-2 justify-center">
+                  {pokemonResult.type1 && (
+                    <div className={`inline-block px-4 py-2 rounded-full text-sm font-medium ${getTypeColors(pokemonResult.type1).bg} ${getTypeColors(pokemonResult.type1).text}`}>
+                      {pokemonResult.type1.charAt(0).toUpperCase() + pokemonResult.type1.slice(1)}
+                    </div>
+                  )}
+                  {pokemonResult.type2 && (
+                    <div className={`inline-block px-4 py-2 rounded-full text-sm font-medium ${getTypeColors(pokemonResult.type2).bg} ${getTypeColors(pokemonResult.type2).text}`}>
+                      {pokemonResult.type2.charAt(0).toUpperCase() + pokemonResult.type2.slice(1)}
+                    </div>
+                  )}
                 </div>
                 {pokemonResult.description && (
                   <p className="text-muted-foreground text-lg max-w-md mx-auto text-pretty">

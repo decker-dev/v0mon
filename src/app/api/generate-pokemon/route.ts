@@ -303,6 +303,8 @@ export async function POST(request: NextRequest) {
         },
         prompt: "Used existing Pokemon from database",
         description: `This is ${existingPokemon.pokemonName}, a unique Pokemon created for @${profile.username}`,
+        type1: existingPokemon.type1,
+        type2: existingPokemon.type2,
         cached: true,
       });
     }
@@ -398,6 +400,8 @@ export async function POST(request: NextRequest) {
           },
           prompt: prompt,
           description: textResponse,
+          type1: randomTypes[0],
+          type2: randomTypes[1] || null,
           cached: false, // Newly generated
         });
       }
