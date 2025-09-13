@@ -210,7 +210,12 @@ function createPokemonPrompt(username: string, types: string[]): string {
 
   const prompt = `Create a unique Pokemon-style creature inspired by the username "@${username}" and embodies a ${personality} personality.
 
-IMPORTANT: First, create a unique Pokemon name (maximum 9 characters) that reflects the username "@${username}" and the ${typeDescription} nature. The name should be creative and Pokemon-like.
+IMPORTANT: First, create a unique Pokemon name (between 4-8 characters) that reflects the username "@${username}" and the ${typeDescription} nature. The name should be:
+- Creative and Pokemon-like (similar to names like Pikachu, Charizard, Blastoise)
+- Easy to pronounce and memorable
+- Incorporate elements from the username "@${username}"
+- Reflect the ${typeDescription} nature
+- Sound catchy and appealing
 
 Then create the image with these specifications:
 
@@ -234,7 +239,7 @@ Design requirements:
 Style: High-quality anime/cartoon style, vibrant colors, Pokemon-inspired but completely original design, cute and appealing.
 
 Response format:
-Please start your response with "Pokemon Name: [NAME]" (where [NAME] is the generated name, max 9 characters), then provide any additional description.`;
+Please start your response with "Pokemon Name: [NAME]" (where [NAME] is the generated name, 4-8 characters), then provide any additional description about the Pokemon.`;
 
   return prompt;
 }
@@ -253,9 +258,13 @@ function createPokemonFilename(username: string, types: string[], pokemonName: s
 function extractPokemonNameFromResponse(textResponse: string): string | null {
   try {
     // Buscar el patrón "Pokemon Name: [NAME]" al inicio de la respuesta
-    const nameMatch = textResponse.match(/Pokemon Name:\s*([^\n\r]{1,9})/i);
+    const nameMatch = textResponse.match(/Pokemon Name:\s*([^\n\r]{1,20})/i);
     if (nameMatch && nameMatch[1]) {
-      return nameMatch[1].trim();
+      const name = nameMatch[1].trim();
+      // Validar que el nombre esté entre 4 y 8 caracteres
+      if (name.length >= 4 && name.length <= 8) {
+        return name;
+      }
     }
     return null;
   } catch {
