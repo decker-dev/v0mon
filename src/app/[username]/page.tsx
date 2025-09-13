@@ -73,7 +73,6 @@ async function getPokemon(
           bio: `Digital creator @${existingPokemon.username}`,
           profileFound: true,
         },
-        description: `This is ${existingPokemon.pokemonName}, a unique Pokemon created for @${existingPokemon.username}`,
         type1: existingPokemon.type1,
         type2: existingPokemon.type2 || undefined,
       };
@@ -257,17 +256,6 @@ export default async function PokemonPage({
             </div>
           </Card>
 
-          {/* Generate Another */}
-          <div className="text-center mt-8">
-            <Link href="/">
-              <Button
-                variant="ghost"
-                className="text-muted-foreground hover:text-foreground"
-              >
-                Generate another avatar
-              </Button>
-            </Link>
-          </div>
         </div>
       </main>
     </div>
