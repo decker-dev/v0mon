@@ -89,7 +89,7 @@ function generatePokemonName(username: string): string {
 }
 
 // Función para crear prompt inteligente con tipos específicos
-function createPokemonPrompt(username: string, pokemonName: string, types: string[]): string {
+function createPokemonPrompt(username: string, types: string[]): string {
   const lowerUsername = username.toLowerCase();
 
   // Usar los tipos pasados como parámetro
@@ -208,7 +208,11 @@ function createPokemonPrompt(username: string, pokemonName: string, types: strin
     ? `${primaryType}/${secondaryType} dual-type`
     : `${primaryType} type`;
 
-  const prompt = `Create a unique Pokemon-style creature called "${pokemonName}". This creature is inspired by the username "@${username}" and embodies a ${personality} personality.
+  const prompt = `Create a unique Pokemon-style creature inspired by the username "@${username}" and embodies a ${personality} personality.
+
+IMPORTANT: First, create a unique Pokemon name (maximum 9 characters) that reflects the username "@${username}" and the ${typeDescription} nature. The name should be creative and Pokemon-like.
+
+Then create the image with these specifications:
 
 Key characteristics:
 - Type: ${typeDescription}
@@ -227,7 +231,10 @@ Design requirements:
 - Use vibrant colors that match the ${primaryType}${secondaryType ? ` and ${secondaryType}` : ""} element${randomTypes.length > 1 ? "s" : ""}
 - Show clear visual indicators of being a ${typeDescription} Pokemon
 
-Style: High-quality anime/cartoon style, vibrant colors, Pokemon-inspired but completely original design, cute and appealing.`;
+Style: High-quality anime/cartoon style, vibrant colors, Pokemon-inspired but completely original design, cute and appealing.
+
+Response format:
+Please start your response with "Pokemon Name: [NAME]" (where [NAME] is the generated name, max 9 characters), then provide any additional description.`;
 
   return prompt;
 }
@@ -240,6 +247,20 @@ function createPokemonFilename(username: string, types: string[], pokemonName: s
   
   // Formato: username_type1-type2_pokemonname.png
   return `${cleanUsername}_${typesString}_${cleanPokemonName}.png`;
+}
+
+// Función para extraer el nombre del Pokémon de la respuesta de la IA
+function extractPokemonNameFromResponse(textResponse: string): string | null {
+  try {
+    // Buscar el patrón "Pokemon Name: [NAME]" al inicio de la respuesta
+    const nameMatch = textResponse.match(/Pokemon Name:\s*([^\n\r]{1,9})/i);
+    if (nameMatch && nameMatch[1]) {
+      return nameMatch[1].trim();
+    }
+    return null;
+  } catch {
+    return null;
+  }
 }
 
 // Función para parsear filename y extraer metadata
@@ -312,9 +333,8 @@ export async function POST(request: NextRequest) {
     // Crear perfil simple basado en username
     const profile = createProfileFromUsername(cleanUsername);
 
-    // Generar tipos aleatorios y nombre del Pokemon
+    // Generar tipos aleatorios
     const randomTypes = getRandomPokemonTypes();
-    const pokemonName = generatePokemonName(profile.username);
 
     // Si no existe, verificar API key y generar nuevo
     const apiKey = process.env.GOOGLE_GENAI_API_KEY;
@@ -328,10 +348,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Crear prompt inteligente basado en el username y tipos
-    const prompt = createPokemonPrompt(profile.username, pokemonName, randomTypes);
+    // Crear prompt inteligente basado en el username y tipos (la IA generará el nombre)
+    const prompt = createPokemonPrompt(profile.username, randomTypes);
 
-    console.log(`🎨 Generating new Pokemon ${pokemonName}:`, prompt);
+    console.log(`🎨 Generating new Pokemon for @${profile.username}:`, prompt);
 
     // Inicializar Google GenAI
     const ai = new GoogleGenAI({
@@ -356,16 +376,32 @@ export async function POST(request: NextRequest) {
     let imageBase64 = "";
     let textResponse = "";
 
+    // Primero extraer el texto para obtener el nombre del Pokemon
     for (const part of candidate.content?.parts || []) {
       if (part.text) {
         textResponse = part.text;
-      } else if (part.inlineData) {
+        break;
+      }
+    }
+
+    // Extraer el nombre del Pokemon de la respuesta de la IA
+    let pokemonName = extractPokemonNameFromResponse(textResponse);
+    if (!pokemonName) {
+      // Fallback al método determinístico si la IA no genera un nombre válido
+      pokemonName = generatePokemonName(profile.username);
+      console.log(`⚠️ Using fallback name: ${pokemonName}`);
+    } else {
+      console.log(`✨ AI generated name: ${pokemonName}`);
+    }
+
+    for (const part of candidate.content?.parts || []) {
+      if (part.inlineData) {
         imageBase64 = part.inlineData?.data || "";
 
         // Convertir base64 a buffer
         const buffer = Buffer.from(imageBase64, "base64");
 
-        // Crear filename con metadata
+        // Crear filename con metadata usando el nombre generado por la IA
         const filename = createPokemonFilename(profile.username, randomTypes, pokemonName);
 
         // Subir la imagen a Vercel Blob
