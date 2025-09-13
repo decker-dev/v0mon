@@ -66,7 +66,7 @@ export async function GET(request: Request) {
       );
     }
 
-    // Mostrar solo la imagen del Pokemon
+    // Mostrar la imagen del Pokemon con efecto blur en los laterales
     return new ImageResponse(
       (
         <div
@@ -76,16 +76,38 @@ export async function GET(request: Request) {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            position: "relative",
             backgroundColor: "#ffffff",
           }}
         >
+          {/* Imagen de fondo borrosa */}
+          <img
+            src={imageUrl}
+            alt=""
+            width="1200"
+            height="630"
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              filter: "blur(20px) brightness(0.3)",
+            }}
+          />
+          
+          {/* Imagen principal centrada */}
           <img
             src={imageUrl}
             alt={pokemonName}
-            width="630"
-            height="630"
+            width="600"
+            height="600"
             style={{
-              objectFit: "cover",
+              position: "relative",
+              objectFit: "contain",
+              borderRadius: "16px",
+              boxShadow: "0 20px 40px rgba(0, 0, 0, 0.3)",
             }}
           />
         </div>
