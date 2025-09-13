@@ -7,7 +7,10 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "biome check",
-    "format": "biome format --write"
+    "format": "biome format --write",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
     "@google/genai": "^1.19.0",
@@ -19,6 +22,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "crypto-js": "^4.2.0",
+    "dotenv": "^17.2.2",
     "drizzle-kit": "^0.31.4",
     "drizzle-orm": "^0.44.5",
     "geist": "^1.5.1",

@@ -2,6 +2,8 @@ import { GoogleGenAI } from "@google/genai";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { put, head } from "@vercel/blob";
+import { db, schema } from "@/lib/db/database";
+import { eq } from "drizzle-orm";
 
 // Array de tipos de Pokemon disponibles
 const POKEMON_TYPES = [
@@ -278,35 +280,39 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Crear perfil simple basado en username
-    const profile = createProfileFromUsername(cleanUsername);
+    // Buscar en la base de datos primero
+    const existingPokemon = await db.query.pokemon.findFirst({
+      where: eq(schema.pokemon.username, cleanUsername),
+    });
 
-    // Generar tipos aleatorios y nombre del Pokemon
-    const randomTypes = getRandomPokemonTypes();
-    const pokemonName = generatePokemonName(profile.username);
+    if (existingPokemon) {
+      console.log(`♻️ Using existing Pokemon from DB: ${existingPokemon.pokemonName}`);
 
-    // Crear filename con metadata
-    const filename = createPokemonFilename(profile.username, randomTypes, pokemonName);
-    const existingBlobUrl = await checkBlobExists(filename);
-
-    if (existingBlobUrl) {
-      console.log(`♻️ Using existing Pokemon: ${pokemonName}`);
+      // Crear perfil simple basado en username
+      const profile = createProfileFromUsername(cleanUsername);
 
       return NextResponse.json({
         success: true,
-        imageUrl: existingBlobUrl,
-        pokemonName: pokemonName,
+        imageUrl: existingPokemon.imageUrl,
+        pokemonName: existingPokemon.pokemonName,
         profile: {
           username: profile.username,
           displayName: profile.displayName,
           bio: profile.bio,
           profileFound: true,
         },
-        prompt: "Used existing Pokemon",
-        description: `This is ${pokemonName}, a unique Pokemon created for @${profile.username}`,
+        prompt: "Used existing Pokemon from database",
+        description: `This is ${existingPokemon.pokemonName}, a unique Pokemon created for @${profile.username}`,
         cached: true,
       });
     }
+
+    // Crear perfil simple basado en username
+    const profile = createProfileFromUsername(cleanUsername);
+
+    // Generar tipos aleatorios y nombre del Pokemon
+    const randomTypes = getRandomPokemonTypes();
+    const pokemonName = generatePokemonName(profile.username);
 
     // Si no existe, verificar API key y generar nuevo
     const apiKey = process.env.GOOGLE_GENAI_API_KEY;
@@ -357,6 +363,9 @@ export async function POST(request: NextRequest) {
         // Convertir base64 a buffer
         const buffer = Buffer.from(imageBase64, "base64");
 
+        // Crear filename con metadata
+        const filename = createPokemonFilename(profile.username, randomTypes, pokemonName);
+
         // Subir la imagen a Vercel Blob
         const blob = await put(filename, buffer, {
           access: "public",
@@ -365,6 +374,17 @@ export async function POST(request: NextRequest) {
 
         console.log(`✅ Created new Pokemon image: ${filename}`);
         console.log(`📡 Blob URL: ${blob.url}`);
+
+        // Guardar en la base de datos
+        const newPokemon = await db.insert(schema.pokemon).values({
+          username: cleanUsername,
+          imageUrl: blob.url,
+          type1: randomTypes[0],
+          type2: randomTypes[1] || null,
+          pokemonName: pokemonName,
+        }).returning();
+
+        console.log(`💾 Saved Pokemon to database: ${newPokemon[0].id}`);
 
         return NextResponse.json({
           success: true,

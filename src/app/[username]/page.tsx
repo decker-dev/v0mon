@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
+import { db, schema } from "@/lib/db/database";
+import { eq } from "drizzle-orm";
 
 interface PokemonResult {
   imageUrl: string;
@@ -18,11 +20,35 @@ interface PokemonResult {
   description?: string;
 }
 
-// Función para generar el Pokémon en el servidor
-async function generatePokemon(
+// Función para obtener el Pokémon desde la base de datos o generar uno nuevo
+async function getPokemon(
   username: string,
 ): Promise<PokemonResult | null> {
   try {
+    const cleanUsername = username.replace("@", "").trim();
+    
+    // Buscar en la base de datos primero
+    const existingPokemon = await db.query.pokemon.findFirst({
+      where: eq(schema.pokemon.username, cleanUsername),
+    });
+
+    if (existingPokemon) {
+      console.log(`♻️ Found existing Pokemon in DB: ${existingPokemon.pokemonName}`);
+      
+      return {
+        imageUrl: existingPokemon.imageUrl,
+        pokemonName: existingPokemon.pokemonName,
+        profile: {
+          username: existingPokemon.username,
+          displayName: existingPokemon.username,
+          bio: `Digital creator @${existingPokemon.username}`,
+          profileFound: true,
+        },
+        description: `This is ${existingPokemon.pokemonName}, a unique Pokemon created for @${existingPokemon.username}`,
+      };
+    }
+
+    // Si no existe en la base de datos, generar uno nuevo usando la API
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
     const response = await fetch(`${baseUrl}/api/generate-pokemon`, {
@@ -30,10 +56,10 @@ async function generatePokemon(
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ username }),
+      body: JSON.stringify({ username: cleanUsername }),
       // Cachear la respuesta para ISR
       next: {
-        tags: [`pokemon-${username}`],
+        tags: [`pokemon-${cleanUsername}`],
         revalidate: false, // No revalidar automáticamente, mantener estático
       },
     });
@@ -47,7 +73,7 @@ async function generatePokemon(
       return null;
     }
   } catch (error) {
-    console.error("Error generating Pokemon:", error);
+    console.error("Error getting Pokemon:", error);
     return null;
   }
 }
@@ -60,8 +86,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { username } = await params;
   
-  // Generar el Pokémon para obtener la información
-  const pokemonResult = await generatePokemon(username);
+  // Obtener el Pokémon para obtener la información
+  const pokemonResult = await getPokemon(username);
   
   if (!pokemonResult) {
     return {
@@ -119,8 +145,8 @@ export default async function PokemonPage({
 
   console.log(`🎮 Generating static page for: ${username}`);
 
-  // Generar el Pokémon en el servidor
-  const pokemonResult = await generatePokemon(username);
+  // Obtener el Pokémon desde la base de datos o generar uno nuevo
+  const pokemonResult = await getPokemon(username);
 
   if (!pokemonResult) {
     notFound();
