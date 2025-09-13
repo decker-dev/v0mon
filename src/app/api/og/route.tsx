@@ -138,39 +138,39 @@ export async function GET(request: Request) {
               padding: "60px",
             }}
           >
-            {/* Lado izquierdo - Imagen del Pokemon */}
+            {/* Lado izquierdo - Imagen del Pokemon (más grande) */}
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                width: "500px",
-                height: "500px",
+                width: "700px",
+                height: "100%",
               }}
             >
               <img
                 src={imageUrl}
                 alt={pokemonName}
-                width="450"
-                height="450"
+                width="600"
+                height="600"
                 style={{
                   objectFit: "contain",
-                  borderRadius: "24px",
-                  boxShadow: "0 25px 50px rgba(0, 0, 0, 0.5)",
-                  backgroundColor: "rgba(255, 255, 255, 0.1)",
-                  padding: "20px",
+                  borderRadius: "32px",
+                  boxShadow: "0 30px 60px rgba(0, 0, 0, 0.6)",
+                  backgroundColor: "rgba(255, 255, 255, 0.15)",
+                  padding: "30px",
                 }}
               />
             </div>
 
-            {/* Lado derecho - Información */}
+            {/* Lado derecho - Información (más compacto) */}
             <div
               style={{
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "flex-start",
                 justifyContent: "center",
-                width: "600px",
+                width: "500px",
                 height: "100%",
                 padding: "40px",
               }}
@@ -178,11 +178,12 @@ export async function GET(request: Request) {
               {/* Nombre del Pokemon */}
               <h1
                 style={{
-                  fontSize: "72px",
+                  fontSize: "64px",
                   fontWeight: "bold",
                   color: "#ffffff",
-                  margin: "0 0 20px 0",
+                  margin: "0 0 16px 0",
                   textShadow: "0 4px 8px rgba(0, 0, 0, 0.8)",
+                  lineHeight: "1.1",
                 }}
               >
                 {pokemonName}
@@ -191,21 +192,21 @@ export async function GET(request: Request) {
               {/* Username */}
               <p
                 style={{
-                  fontSize: "28px",
+                  fontSize: "24px",
                   color: "#cccccc",
-                  margin: "0 0 40px 0",
+                  margin: "0 0 32px 0",
                   textShadow: "0 2px 4px rgba(0, 0, 0, 0.8)",
                 }}
               >
-                Created for @{username}
+                @{username}
               </p>
 
               {/* Badges de tipos */}
               <div
                 style={{
                   display: "flex",
-                  gap: "16px",
-                  marginBottom: "40px",
+                  gap: "12px",
+                  marginBottom: "32px",
                 }}
               >
                 {pokemonData.type1 && (
@@ -213,9 +214,9 @@ export async function GET(request: Request) {
                     style={{
                       backgroundColor: getTypeColor(pokemonData.type1),
                       color: "#ffffff",
-                      fontSize: "24px",
+                      fontSize: "22px",
                       fontWeight: "bold",
-                      padding: "12px 24px",
+                      padding: "10px 20px",
                       borderRadius: "50px",
                     }}
                   >
@@ -227,9 +228,9 @@ export async function GET(request: Request) {
                     style={{
                       backgroundColor: getTypeColor(pokemonData.type2),
                       color: "#ffffff",
-                      fontSize: "24px",
+                      fontSize: "22px",
                       fontWeight: "bold",
-                      padding: "12px 24px",
+                      padding: "10px 20px",
                       borderRadius: "50px",
                     }}
                   >
