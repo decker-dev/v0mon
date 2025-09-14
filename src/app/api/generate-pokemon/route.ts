@@ -225,9 +225,9 @@ Please start your response with "Pokemon Name: [NAME]" (where [NAME] is the gene
   return prompt;
 }
 
-function createPokemonFilename(username: string, types: string[], pokemonName: string): string {
+function createPokemonFilename(username: string): string {
   const cleanUsername = username.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
-  
+
   return `${cleanUsername}.png`;
 }
 
@@ -248,15 +248,12 @@ function extractPokemonNameFromResponse(textResponse: string): string | null {
 
 export async function POST(request: NextRequest) {
   try {
-    const authApiKey = request.headers.get('x-api-key');
-    
+    const authApiKey = request.headers.get("x-api-key");
+
     const internalApiKey = process.env.INTERNAL_API_KEY;
-    
+
     if (!internalApiKey || authApiKey !== internalApiKey) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 },
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const { username } = await request.json();
@@ -269,10 +266,17 @@ export async function POST(request: NextRequest) {
     }
 
     const cleanUsername = username.replace("@", "").trim().toLowerCase();
-    
-    if (!cleanUsername || cleanUsername.length > 15 || !/^[a-zA-Z0-9_]+$/.test(cleanUsername)) {
+
+    if (
+      !cleanUsername ||
+      cleanUsername.length > 15 ||
+      !/^[a-zA-Z0-9_]+$/.test(cleanUsername)
+    ) {
       return NextResponse.json(
-        { error: "Invalid username. Must be 1-15 characters, letters, numbers and underscores only." },
+        {
+          error:
+            "Invalid username. Must be 1-15 characters, letters, numbers and underscores only.",
+        },
         { status: 400 },
       );
     }
@@ -282,7 +286,9 @@ export async function POST(request: NextRequest) {
     });
 
     if (existingPokemon) {
-      console.log(`♻️ Using existing Pokemon from DB: ${existingPokemon.pokemonName}`);
+      console.log(
+        `♻️ Using existing Pokemon from DB: ${existingPokemon.pokemonName}`,
+      );
 
       const profile = createProfileFromUsername(cleanUsername);
 
@@ -352,7 +358,6 @@ export async function POST(request: NextRequest) {
 
     let pokemonName = extractPokemonNameFromResponse(textResponse);
     if (!pokemonName) {
-
       pokemonName = generatePokemonName(profile.username);
       console.log(`⚠️ Using fallback name: ${pokemonName}`);
     } else {
@@ -363,12 +368,9 @@ export async function POST(request: NextRequest) {
       if (part.inlineData) {
         imageBase64 = part.inlineData?.data || "";
 
-
         const buffer = Buffer.from(imageBase64, "base64");
 
-
-        const filename = createPokemonFilename(profile.username, randomTypes, pokemonName);
-
+        const filename = createPokemonFilename(profile.username);
 
         const blob = await put(filename, buffer, {
           access: "public",
@@ -378,14 +380,16 @@ export async function POST(request: NextRequest) {
         console.log(`✅ Created new Pokemon image: ${filename}`);
         console.log(`📡 Blob URL: ${blob.url}`);
 
-
-        const newPokemon = await db.insert(schema.pokemon).values({
-          username: cleanUsername,
-          imageUrl: blob.url,
-          type1: randomTypes[0],
-          type2: randomTypes[1] || null,
-          pokemonName: pokemonName,
-        }).returning();
+        const newPokemon = await db
+          .insert(schema.pokemon)
+          .values({
+            username: cleanUsername,
+            imageUrl: blob.url,
+            type1: randomTypes[0],
+            type2: randomTypes[1] || null,
+            pokemonName: pokemonName,
+          })
+          .returning();
 
         console.log(`💾 Saved Pokemon to database: ${newPokemon[0].id}`);
 
@@ -418,5 +422,5 @@ export async function POST(request: NextRequest) {
       { error: "Failed to generate Pokemon" },
       { status: 500 },
     );
-  } 
+  }
 }
