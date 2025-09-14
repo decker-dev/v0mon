@@ -259,17 +259,17 @@ export default async function PokemonPage({
               <Link href="/" className="flex-1">
                 <Button
                   variant="outline"
-                  className="border-solid border-border"
+                  className="border-orange-500 hover:border-orange-600"
                 >
                   Create another
                 </Button>
               </Link>
+              <CopyLinkButton username={username} />
               <DownloadButton
                 imageUrl={pokemonResult.imageUrl}
                 pokemonName={pokemonResult.pokemonName}
                 username={username}
               />
-              <CopyLinkButton username={username} />
             </div>
           </div>
         </div>

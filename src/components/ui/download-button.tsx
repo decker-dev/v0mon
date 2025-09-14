@@ -44,7 +44,7 @@ export function DownloadButton({
     <Button
       onClick={handleDownload}
       variant="outline"
-      className="flex items-center gap-2 flex-1"
+      className="flex items-center gap-2 flex-1 border-orange-500 hover:border-orange-600"
     >
       <Download className="w-4 h-4" />
       Download

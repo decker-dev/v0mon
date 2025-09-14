@@ -43,7 +43,7 @@ export function CopyLinkButton({ username }: CopyLinkButtonProps) {
     <Button
       onClick={handleCopyLink}
       variant="outline"
-      className="flex items-center gap-2 flex-1"
+      className="flex items-center gap-2 flex-1 border-orange-500 hover:border-orange-60"
     >
       {copied ? (
         <>
