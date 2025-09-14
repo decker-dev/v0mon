@@ -202,62 +202,6 @@ pnpm db:migrate
 pnpm db:studio
 ```
 
-## 🎯 API Endpoints
-
-### `POST /api/generate-pokemon`
-
-Generates a new Pokémon for a username.
-
-**Request Body:**
-```json
-{
-  "username": "elonmusk"
-}
-```
-
-**Response:**
-```json
-{
-  "success": true,
-  "imageUrl": "https://...",
-  "pokemonName": "Elonchu",
-  "type1": "electric",
-  "type2": "steel",
-  "description": "A tech-savvy Pokemon...",
-  "profile": {
-    "username": "elonmusk",
-    "displayName": "elonmusk",
-    "bio": "Digital creator @elonmusk",
-    "profileFound": true
-  },
-  "cached": false
-}
-```
-
-### `GET /api/og?username=<username>`
-
-Generates Open Graph images for social sharing.
-
-## 🎨 Pokémon Types
-
-The app supports all 18 official Pokémon types:
-
-- Normal, Fire, Water, Electric, Grass, Ice
-- Fighting, Poison, Ground, Flying, Psychic, Bug
-- Rock, Ghost, Dragon, Dark, Steel, Fairy
-
-Each type comes with unique personality traits and visual characteristics that influence the generated artwork.
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
 ## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
