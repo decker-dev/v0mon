@@ -1,7 +1,30 @@
 {
   "name": "v0mon",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.0",
+  "description": "Generate personalized Pokémon avatars from X/Twitter usernames using AI",
+  "author": "decker",
+  "license": "MIT",
+  "homepage": "https://v0mon.vercel.app",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/decker-dev/v0mon.git"
+  },
+  "keywords": [
+    "pokemon",
+    "avatar",
+    "generator",
+    "ai",
+    "nextjs",
+    "twitter",
+    "gemini",
+    "pokemon-generator",
+    "social-media",
+    "profile-picture"
+  ],
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
