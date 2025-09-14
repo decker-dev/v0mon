@@ -83,7 +83,7 @@ export default function Home() {
                 placeholder="@elonmusk"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="h-14 text-lg pl-4 pr-4 bg-input focus:border-primary transition-colors"
+                className="h-14 text-lg pl-4 pr-4 bg-input focus:border-primary transition-colors border-orange-500 hover:border-orange-600"
                 disabled={isLoading}
                 minLength={1}
                 maxLength={15}
