@@ -17,6 +17,34 @@ export const metadata: Metadata = {
   title: "v0mon - Generate Your V0mon Avatar",
   description:
     "Transform any X/Twitter profile into a unique V0mon. Enter your @ and discover your personalized creature.",
+  openGraph: {
+    title: "v0mon - Generate Your V0mon Avatar",
+    description:
+      "Transform any X/Twitter profile into a unique V0mon. Enter your @ and discover your personalized creature.",
+    type: "website",
+    url: "https://v0mon.vercel.app",
+    images: [
+      {
+        url: "/api/og-home",
+        width: 1200,
+        height: 630,
+        alt: "v0mon - Generate your V0mon with @handle",
+      },
+    ],
+    siteName: "v0mon",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "v0mon - Generate Your V0mon Avatar",
+    description:
+      "Transform any X/Twitter profile into a unique V0mon. Enter your @ and discover your personalized creature.",
+    images: ["/api/og-home"],
+    creator: "@v0mon",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({
