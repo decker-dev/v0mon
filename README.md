@@ -1,4 +1,4 @@
-# 🎮 v0mon - V0mon Avatar Generator
+# v0mon - V0mon Avatar Generator
 
 Transform any X/Twitter username into a unique, AI-generated V0mon avatar! v0mon uses Google's Gemini AI to create personalized V0mon creatures based on usernames, complete with custom types, names, and descriptions.
 
