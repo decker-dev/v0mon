@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
+import { toast } from "sonner";
 
 interface DownloadButtonProps {
   imageUrl: string;
@@ -33,8 +34,19 @@ export function DownloadButton({
 
       // Clean up the object URL
       URL.revokeObjectURL(blobUrl);
+
+      // Show success toast
+      toast.success("Image downloaded successfully!", {
+        description: `${pokemonName} has been saved to your downloads`,
+      });
     } catch (error) {
       console.error("Error downloading image:", error);
+
+      // Show error toast
+      toast.error("Download failed", {
+        description: "Opening image in new tab instead",
+      });
+
       // Fallback: open in new tab if download fails
       window.open(imageUrl, "_blank");
     }

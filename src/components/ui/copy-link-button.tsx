@@ -1,41 +1,44 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Link, Check } from "lucide-react";
-import { useState } from "react";
+import { Link } from "lucide-react";
+import { toast } from "sonner";
 
 interface CopyLinkButtonProps {
   username: string;
 }
 
 export function CopyLinkButton({ username }: CopyLinkButtonProps) {
-  const [copied, setCopied] = useState(false);
-
   const handleCopyLink = async () => {
     const url = `https://v0mon.vercel.app/${username}`;
 
     try {
       await navigator.clipboard.writeText(url);
-      setCopied(true);
 
-      // Reset the copied state after 2 seconds
-      setTimeout(() => {
-        setCopied(false);
-      }, 2000);
+      // Show success toast
+      toast.success("Link copied to clipboard!", {
+        description: url,
+      });
     } catch (error) {
       console.error("Failed to copy link:", error);
-      // Fallback for older browsers
-      const textArea = document.createElement("textarea");
-      textArea.value = url;
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand("copy");
-      document.body.removeChild(textArea);
 
-      setCopied(true);
-      setTimeout(() => {
-        setCopied(false);
-      }, 2000);
+      // Fallback for older browsers
+      try {
+        const textArea = document.createElement("textarea");
+        textArea.value = url;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textArea);
+
+        toast.success("Link copied to clipboard!", {
+          description: url,
+        });
+      } catch (fallbackError) {
+        toast.error("Failed to copy link", {
+          description: "Please copy manually from the address bar",
+        });
+      }
     }
   };
 
@@ -45,17 +48,8 @@ export function CopyLinkButton({ username }: CopyLinkButtonProps) {
       variant="outline"
       className="flex items-center gap-2 flex-1 border-orange-500 hover:border-orange-60"
     >
-      {copied ? (
-        <>
-          <Check className="w-4 h-4 text-green-500" />
-          Copied!
-        </>
-      ) : (
-        <>
-          <Link className="w-4 h-4" />
-          Copy Link
-        </>
-      )}
+      <Link className="w-4 h-4" />
+      Copy Link
     </Button>
   );
 }
