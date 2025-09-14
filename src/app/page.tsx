@@ -12,20 +12,20 @@ export default function Home() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const cleanUsername = username.replace("@", "").trim();
-    
+
     // Validaciones
     if (!cleanUsername) {
       setError("Please enter a username");
       return;
     }
-    
+
     if (cleanUsername.length > 15) {
       setError("Username must be 15 characters or less");
       return;
     }
-    
+
     if (!/^[a-zA-Z0-9_]+$/.test(cleanUsername)) {
       setError("Username can only contain letters, numbers and underscores");
       return;
@@ -58,7 +58,7 @@ export default function Home() {
           <div className="text-center space-y-4">
             <h2 className="text-4xl font-bold tracking-tight text-balance">
               Generate Your
-              <span className="text-primary block">V0mon Avatar</span>
+              <span className="text-primary block">Pokemon Avatar</span>
             </h2>
             <p className="text-muted-foreground text-lg text-pretty">
               Convert any X/Twitter profile into a unique V0mon. Enter your @
