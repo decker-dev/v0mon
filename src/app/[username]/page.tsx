@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ShareButton } from "@/components/ui/share-button";
 import { DownloadButton } from "@/components/ui/download-button";
+import { CopyLinkButton } from "@/components/ui/copy-link-button";
 import { Github, Sparkles } from "lucide-react";
 import type { Metadata } from "next";
 import { db, schema } from "@/lib/db/database";
@@ -253,21 +254,22 @@ export default async function PokemonPage({
               description={pokemonResult.description}
             />
 
-            {/* Download and Create Another - 50% each */}
-            <div className="flex gap-4">
+            {/* Secondary Actions - 3 buttons */}
+            <div className="flex gap-3">
+              <Link href="/" className="flex-1">
+                <Button
+                  variant="outline"
+                  className="border-solid border-border"
+                >
+                  Create another
+                </Button>
+              </Link>
               <DownloadButton
                 imageUrl={pokemonResult.imageUrl}
                 pokemonName={pokemonResult.pokemonName}
                 username={username}
               />
-              <Link href="/" className="flex-1">
-                <Button
-                  variant="outline"
-                  className="w-full bg-white text-black"
-                >
-                  Create another
-                </Button>
-              </Link>
+              <CopyLinkButton username={username} />
             </div>
           </div>
         </div>
