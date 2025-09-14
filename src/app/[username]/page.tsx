@@ -256,6 +256,15 @@ export default async function PokemonPage({
             </div>
           </Card>
 
+          {/* Create Another Button */}
+          <div className="text-center mt-8">
+            <Link href="/">
+              <Button>
+                Create another
+              </Button>
+            </Link>
+          </div>
+
         </div>
       </main>
     </div>
