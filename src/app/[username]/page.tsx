@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ShareButton } from "@/components/ui/share-button";
-import { ArrowLeft } from "lucide-react";
+import { Github, Sparkles } from "lucide-react";
 import type { Metadata } from "next";
 import { db, schema } from "@/lib/db/database";
 import { eq } from "drizzle-orm";
@@ -178,20 +178,20 @@ export default async function PokemonPage({
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="p-6 flex items-center justify-between">
-        <Link href="/">
-          <Button
-            variant="ghost"
-            className="flex items-center gap-2 hover:bg-secondary"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to home
-          </Button>
+      <header className="p-6 flex justify-between items-center">
+        <Link href="/" className="flex items-center gap-2 animate-fade-in-up">
+          <Sparkles className="w-6 h-6 text-primary" />
+          <h1 className="text-2xl font-bold tracking-tight">v0mon</h1>
         </Link>
-
-        <div className="flex items-center gap-2">
-          <h1 className="text-xl font-bold">v0mon</h1>
-        </div>
+        <a
+          href="https://github.com/decker-dev/v0mon"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors animate-fade-in-up"
+        >
+          <Github className="w-5 h-5" />
+          <span className="hidden sm:inline">GitHub</span>
+        </a>
       </header>
 
       <main className="px-6 pb-12">
@@ -240,11 +240,6 @@ export default async function PokemonPage({
                     </div>
                   )}
                 </div>
-                {pokemonResult.description && (
-                  <p className="text-muted-foreground text-lg max-w-md mx-auto text-pretty">
-                    {pokemonResult.description}
-                  </p>
-                )}
               </div>
             </div>
           </Card>
