@@ -291,6 +291,18 @@ function parseFilename(filename: string): { username: string, types: string[], p
 
 export async function POST(request: NextRequest) {
   try {
+    // Verificar API key interna para prevenir acceso externo
+    const authApiKey = request.headers.get('x-api-key');
+    
+    const internalApiKey = process.env.INTERNAL_API_KEY;
+    
+    if (!internalApiKey || authApiKey !== internalApiKey) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 },
+      );
+    }
+
     const { username } = await request.json();
 
     if (!username) {

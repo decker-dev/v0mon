@@ -44,6 +44,7 @@ async function getPokemonData(username: string) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "x-api-key": process.env.INTERNAL_API_KEY || "",
       },
       body: JSON.stringify({ username: cleanUsername }),
     });
