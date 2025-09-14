@@ -99,25 +99,8 @@ export async function GET() {
                 fontWeight: "500",
               }}
             >
-              Generate your V0mon with @handle
+              Generate your V0mon with @
             </p>
-
-            <div
-              style={{
-                fontSize: "20px",
-                color: "#94a3b8",
-                textShadow: "0 2px 4px rgba(0, 0, 0, 0.8)",
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                marginBottom: "32px",
-              }}
-            >
-              <span>✨</span>
-              <span>
-                Transform your X/Twitter profile into a unique creature
-              </span>
-            </div>
 
             {/* Badge/Tag */}
             <div
