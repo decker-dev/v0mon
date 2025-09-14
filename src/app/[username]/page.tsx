@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { ShareButton } from "@/components/ui/share-button";
 import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 import { db, schema } from "@/lib/db/database";
@@ -256,10 +257,15 @@ export default async function PokemonPage({
             </div>
           </Card>
 
-          {/* Create Another Button */}
-          <div className="text-center mt-8">
+          {/* Action Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
+            <ShareButton 
+              username={username}
+              pokemonName={pokemonResult.pokemonName}
+              description={pokemonResult.description}
+            />
             <Link href="/">
-              <Button>
+              <Button variant="outline" className="bg-white text-black">
                 Create another
               </Button>
             </Link>
