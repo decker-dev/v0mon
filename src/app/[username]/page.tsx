@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ShareButton } from "@/components/ui/share-button";
+import { DownloadButton } from "@/components/ui/download-button";
 import { Github, Sparkles } from "lucide-react";
 import type { Metadata } from "next";
 import { db, schema } from "@/lib/db/database";
@@ -244,17 +245,30 @@ export default async function PokemonPage({
             </div>
           </Card>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
+          <div className="flex flex-col gap-4 mt-8 max-w-md mx-auto w-full">
+            {/* Share Button - Full Width */}
             <ShareButton
               username={username}
               pokemonName={pokemonResult.pokemonName}
               description={pokemonResult.description}
             />
-            <Link href="/">
-              <Button variant="outline" className="bg-white text-black">
-                Create another
-              </Button>
-            </Link>
+
+            {/* Download and Create Another - 50% each */}
+            <div className="flex gap-4">
+              <DownloadButton
+                imageUrl={pokemonResult.imageUrl}
+                pokemonName={pokemonResult.pokemonName}
+                username={username}
+              />
+              <Link href="/" className="flex-1">
+                <Button
+                  variant="outline"
+                  className="w-full bg-white text-black"
+                >
+                  Create another
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </main>
