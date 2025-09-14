@@ -54,7 +54,7 @@ async function getPokemon(
   username: string,
 ): Promise<PokemonResult | null> {
   try {
-    const cleanUsername = username.replace("@", "").trim();
+    const cleanUsername = username.replace("@", "").trim().toLowerCase();
     
     // Buscar en la base de datos primero
     const existingPokemon = await db.query.pokemon.findFirst({

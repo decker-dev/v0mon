@@ -56,7 +56,7 @@ async function checkBlobExists(filename: string): Promise<string | null> {
 
 // Función simple para crear perfil basado solo en el username
 function createProfileFromUsername(username: string) {
-  const cleanUsername = username.replace("@", "");
+  const cleanUsername = username.replace("@", "").toLowerCase();
 
   console.log(`🎮 Creating Pokemon profile for: @${cleanUsername}`);
 
@@ -301,7 +301,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Validaciones de username
-    const cleanUsername = username.replace("@", "").trim();
+    const cleanUsername = username.replace("@", "").trim().toLowerCase();
     
     if (!cleanUsername || cleanUsername.length > 15 || !/^[a-zA-Z0-9_]+$/.test(cleanUsername)) {
       return NextResponse.json(
