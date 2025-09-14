@@ -244,14 +244,12 @@ Please start your response with "Pokemon Name: [NAME]" (where [NAME] is the gene
   return prompt;
 }
 
-// Función para crear filename con metadata
+// Función para crear filename simple basado solo en username
 function createPokemonFilename(username: string, types: string[], pokemonName: string): string {
   const cleanUsername = username.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
-  const cleanPokemonName = pokemonName.toLowerCase();
-  const typesString = types.join("-");
   
-  // Formato: username_type1-type2_pokemonname.png
-  return `${cleanUsername}_${typesString}_${cleanPokemonName}.png`;
+  // Formato simple: username.png
+  return `${cleanUsername}.png`;
 }
 
 // Función para extraer el nombre del Pokémon de la respuesta de la IA
@@ -267,23 +265,6 @@ function extractPokemonNameFromResponse(textResponse: string): string | null {
       }
     }
     return null;
-  } catch {
-    return null;
-  }
-}
-
-// Función para parsear filename y extraer metadata
-function parseFilename(filename: string): { username: string, types: string[], pokemonName: string } | null {
-  try {
-    const nameWithoutExt = filename.replace('.png', '');
-    const parts = nameWithoutExt.split('_');
-    
-    if (parts.length !== 3) return null;
-    
-    const [username, typesString, pokemonName] = parts;
-    const types = typesString.split('-');
-    
-    return { username, types, pokemonName };
   } catch {
     return null;
   }
