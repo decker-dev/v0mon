@@ -11,13 +11,10 @@ export async function GET() {
           width: "100%",
           display: "flex",
           position: "relative",
-          backgroundColor: "#0f0f23",
-          backgroundImage:
-            "radial-gradient(circle at 25px 25px, #333 2%, transparent 0%), radial-gradient(circle at 75px 75px, #333 2%, transparent 0%)",
-          backgroundSize: "100px 100px",
+          backgroundColor: "#1a1a1a",
         }}
       >
-        {/* Background Pokemon Image */}
+        {/* Background blur effect */}
         <img
           src="https://v0mon.vercel.app/pokemon.png"
           alt=""
@@ -30,70 +27,113 @@ export async function GET() {
             width: "100%",
             height: "100%",
             objectFit: "cover",
-            opacity: 0.15,
-            filter: "blur(2px)",
+            filter: "blur(25px) brightness(0.2)",
           }}
         />
 
-        {/* Content */}
         <div
           style={{
             position: "relative",
             width: "100%",
             height: "100%",
             display: "flex",
-            flexDirection: "column",
             alignItems: "center",
-            justifyContent: "center",
-            padding: "80px",
-            textAlign: "center",
+            justifyContent: "space-between",
+            padding: "60px",
           }}
         >
-          {/* Main Title */}
-          <h1
-            style={{
-              fontSize: "96px",
-              fontWeight: "bold",
-              color: "#ffffff",
-              margin: "0 0 24px 0",
-              textShadow: "0 8px 16px rgba(0, 0, 0, 0.8)",
-              lineHeight: "1",
-              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-              backgroundClip: "text",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-            }}
-          >
-            v0mon
-          </h1>
-
-          {/* Subtitle */}
-          <p
-            style={{
-              fontSize: "36px",
-              color: "#e2e8f0",
-              margin: "0 0 48px 0",
-              textShadow: "0 4px 8px rgba(0, 0, 0, 0.8)",
-              fontWeight: "500",
-            }}
-          >
-            Generate your V0mon with @handle
-          </p>
-
-          {/* Call to Action */}
+          {/* Pokemon Image - Left Side */}
           <div
             style={{
-              fontSize: "24px",
-              color: "#94a3b8",
-              textShadow: "0 2px 4px rgba(0, 0, 0, 0.8)",
               display: "flex",
               alignItems: "center",
-              gap: "12px",
+              justifyContent: "center",
+              width: "600px",
+              height: "100%",
             }}
           >
-            <span>✨</span>
-            <span>Transform your X/Twitter profile into a unique creature</span>
-            <span>✨</span>
+            <img
+              src="https://v0mon.vercel.app/pokemon.png"
+              alt="V0mon Pokemon"
+              width="500"
+              height="500"
+              style={{
+                objectFit: "contain",
+                borderRadius: "24px",
+                filter: "drop-shadow(0 20px 40px rgba(0, 0, 0, 0.5))",
+              }}
+            />
+          </div>
+
+          {/* Text Content - Right Side */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
+              justifyContent: "center",
+              width: "600px",
+              height: "100%",
+              padding: "40px",
+            }}
+          >
+            <h1
+              style={{
+                fontSize: "72px",
+                fontWeight: "bold",
+                color: "#ffffff",
+                margin: "0 0 20px 0",
+                textShadow: "0 4px 8px rgba(0, 0, 0, 0.8)",
+                lineHeight: "1.1",
+              }}
+            >
+              v0mon
+            </h1>
+
+            <p
+              style={{
+                fontSize: "28px",
+                color: "#e2e8f0",
+                margin: "0 0 24px 0",
+                textShadow: "0 2px 4px rgba(0, 0, 0, 0.8)",
+                fontWeight: "500",
+              }}
+            >
+              Generate your V0mon with @handle
+            </p>
+
+            <div
+              style={{
+                fontSize: "20px",
+                color: "#94a3b8",
+                textShadow: "0 2px 4px rgba(0, 0, 0, 0.8)",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                marginBottom: "32px",
+              }}
+            >
+              <span>✨</span>
+              <span>
+                Transform your X/Twitter profile into a unique creature
+              </span>
+            </div>
+
+            {/* Badge/Tag */}
+            <div
+              style={{
+                backgroundColor: "rgba(102, 126, 234, 0.2)",
+                border: "1px solid rgba(102, 126, 234, 0.3)",
+                color: "#667eea",
+                fontSize: "18px",
+                fontWeight: "600",
+                padding: "12px 24px",
+                borderRadius: "50px",
+                textShadow: "none",
+              }}
+            >
+              AI-Powered Pokemon Generator
+            </div>
           </div>
         </div>
       </div>,
