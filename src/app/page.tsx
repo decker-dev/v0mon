@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles, Github } from "lucide-react";
 
 export default function Home() {
   const [username, setUsername] = useState("");
@@ -44,11 +44,20 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
-      <header className="p-6 flex justify-center">
+      <header className="p-6 flex justify-between items-center">
         <div className="flex items-center gap-2 animate-fade-in-up">
           <Sparkles className="w-6 h-6 text-primary" />
           <h1 className="text-2xl font-bold tracking-tight">v0mon</h1>
         </div>
+        <a
+          href="https://github.com/decker-dev/v0mon"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors animate-fade-in-up"
+        >
+          <Github className="w-5 h-5" />
+          <span className="hidden sm:inline">GitHub</span>
+        </a>
       </header>
 
       {/* Main Content */}

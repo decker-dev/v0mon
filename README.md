@@ -4,7 +4,7 @@ Transform any X/Twitter username into a unique, AI-generated V0mon avatar! v0mon
 
 ![v0mon Banner](https://v0mon.vercel.app/api/og?username=example)
 
-## ✨ Features
+## Features
 
 - **AI-Powered Generation**: Uses Google Gemini 2.5 Flash to create unique V0mon artwork
 - **Smart Type System**: Assigns 1-2 V0mon types with personality traits matching the username
@@ -15,11 +15,11 @@ Transform any X/Twitter username into a unique, AI-generated V0mon avatar! v0mon
 - **Responsive Design**: Beautiful UI that works on all devices
 - **Fast Performance**: Built with Next.js 15 and optimized for speed
 
-## 🚀 Live Demo
+## Live Demo
 
 Visit **[v0mon.vercel.app](https://v0mon.vercel.app)** to try it out!
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Framework**: Next.js 15 with App Router
 - **AI**: Google Gemini 2.5 Flash Image Preview
@@ -29,7 +29,7 @@ Visit **[v0mon.vercel.app](https://v0mon.vercel.app)** to try it out!
 - **Deployment**: Vercel
 - **Language**: TypeScript
 
-## 📋 Prerequisites
+## Prerequisites
 
 - Node.js 18+ 
 - pnpm 8+
@@ -37,7 +37,7 @@ Visit **[v0mon.vercel.app](https://v0mon.vercel.app)** to try it out!
 - Google AI API key
 - Vercel account (for blob storage)
 
-## ⚙️ Installation
+## Installation
 
 1. **Clone the repository**
    ```bash
@@ -82,7 +82,7 @@ Visit **[v0mon.vercel.app](https://v0mon.vercel.app)** to try it out!
    
    Navigate to `http://localhost:3000`
 
-## 🔧 Environment Variables
+## Environment Variables
 
 | Variable | Description | Required |
 |----------|-------------|----------|
@@ -103,7 +103,7 @@ Visit **[v0mon.vercel.app](https://v0mon.vercel.app)** to try it out!
    - Navigate to Storage → Blob
    - Create a new store and copy the token
 
-## 📊 Database Schema
+## Database Schema
 
 The app uses a simple PostgreSQL schema:
 
@@ -120,7 +120,7 @@ CREATE TABLE pokemon (
 );
 ```
 
-## 🎨 How It Works
+## How It Works
 
 1. **Username Input**: User enters an X/Twitter username
 2. **Type Generation**: Algorithm assigns 1-2 random V0mon types
@@ -133,7 +133,7 @@ CREATE TABLE pokemon (
 6. **Storage**: Image stored in Vercel Blob, metadata in PostgreSQL
 7. **Sharing**: Users can share their V0mon on social media
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 v0mon/
@@ -156,7 +156,7 @@ v0mon/
 └── package.json
 ```
 
-## 🚀 Deployment
+## Deployment
 
 ### Deploy to Vercel
 
@@ -174,7 +174,7 @@ pnpm build
 pnpm start
 ```
 
-## 🛠️ Development Scripts
+## Development Scripts
 
 ```bash
 # Development server with Turbopack
@@ -202,18 +202,18 @@ pnpm db:migrate
 pnpm db:studio
 ```
 
-## 📝 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - [V0mon](https://www.pokemon.com/) for the inspiration
 - [Google AI](https://ai.google.dev/) for the Gemini model
 - [Vercel](https://vercel.com/) for hosting and storage
 - [shadcn/ui](https://ui.shadcn.com/) for the beautiful components
 
-## 📞 Support
+## Support
 
 If you encounter any issues or have questions, please [open an issue](https://github.com/decker-dev/v0mon/issues) on GitHub.
 
