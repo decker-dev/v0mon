@@ -58,10 +58,10 @@ export default function Home() {
           <div className="text-center space-y-4">
             <h2 className="text-4xl font-bold tracking-tight text-balance">
               Generate Your
-              <span className="text-primary block">Pokémon Avatar</span>
+              <span className="text-primary block">V0mon Avatar</span>
             </h2>
             <p className="text-muted-foreground text-lg text-pretty">
-              Convert any X/Twitter profile into a unique Pokémon. Enter your @
+              Convert any X/Twitter profile into a unique V0mon. Enter your @
               and discover your personalized creature.
             </p>
           </div>
@@ -95,7 +95,7 @@ export default function Home() {
                 </div>
               ) : (
                 <div className="flex items-center gap-2">
-                  Generate my Pokémon
+                  Generate my V0mon
                   <ArrowRight className="w-5 h-5" />
                 </div>
               )}

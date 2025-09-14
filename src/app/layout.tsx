@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Analytics } from "@vercel/analytics/next"
-
+import { Analytics } from "@vercel/analytics/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,9 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "v0mon - Generate Your Pokémon Avatar",
+  title: "v0mon - Generate Your V0mon Avatar",
   description:
-    "Transform any X/Twitter profile into a unique Pokémon. Enter your @ and discover your personalized creature.",
+    "Transform any X/Twitter profile into a unique V0mon. Enter your @ and discover your personalized creature.",
 };
 
 export default function RootLayout({

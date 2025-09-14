@@ -5,7 +5,6 @@ import { put, head } from "@vercel/blob";
 import { db, schema } from "@/lib/db/database";
 import { eq } from "drizzle-orm";
 
-// Array de tipos de Pokemon disponibles
 const POKEMON_TYPES = [
   "normal",
   "fire",
@@ -27,34 +26,27 @@ const POKEMON_TYPES = [
   "fairy",
 ];
 
-// Función para seleccionar tipos aleatorios (1 o 2)
 function getRandomPokemonTypes(): string[] {
-  // Decidir aleatoriamente si tendrá 1 o 2 tipos (70% chance de 1 tipo, 30% de 2 tipos)
   const shouldHaveTwoTypes = Math.random() < 0.3;
 
   if (shouldHaveTwoTypes) {
-    // Seleccionar 2 tipos diferentes
     const shuffled = [...POKEMON_TYPES].sort(() => Math.random() - 0.5);
     return shuffled.slice(0, 2);
   } else {
-    // Seleccionar 1 tipo
     const randomIndex = Math.floor(Math.random() * POKEMON_TYPES.length);
     return [POKEMON_TYPES[randomIndex]];
   }
 }
 
-// Función para verificar si una imagen ya existe en Vercel Blob
 async function checkBlobExists(filename: string): Promise<string | null> {
   try {
     const blobInfo = await head(filename);
     return blobInfo.url;
   } catch {
-    // Si el blob no existe, head() lanzará un error
     return null;
   }
 }
 
-// Función simple para crear perfil basado solo en el username
 function createProfileFromUsername(username: string) {
   const cleanUsername = username.replace("@", "").toLowerCase();
 
@@ -69,33 +61,26 @@ function createProfileFromUsername(username: string) {
   };
 }
 
-// Función para generar nombre de Pokemon creativo
 function generatePokemonName(username: string): string {
-  // Limpiar caracteres especiales
   const cleanUsername = username.replace(/[^a-zA-Z0-9]/g, "");
 
-  // Generar variaciones creativas basadas en el username
   const variations = [
     `${cleanUsername}mon`,
     `${cleanUsername}chu`,
-    `${cleanUsername.slice(0, 4)}eon`, // estilo Eevee evolutions
-    `${cleanUsername.slice(0, 5)}ite`, // estilo minerales Pokemon
-    `${cleanUsername}zard`, // estilo Charizard
+    `${cleanUsername.slice(0, 4)}eon`,
+    `${cleanUsername.slice(0, 5)}ite`,
+    `${cleanUsername}zard`,
   ];
 
-  // Seleccionar una variación basada en la longitud del nombre
   const selectedIndex = cleanUsername.length % variations.length;
   return variations[selectedIndex];
 }
 
-// Función para crear prompt inteligente con tipos específicos
 function createPokemonPrompt(username: string, types: string[]): string {
   const lowerUsername = username.toLowerCase();
 
-  // Usar los tipos pasados como parámetro
   const randomTypes = types;
 
-  // Mapear tipos a características y personalidades
   const typeCharacteristics: Record<
     string,
     { personality: string; traits: string[] }
@@ -174,7 +159,6 @@ function createPokemonPrompt(username: string, types: string[]): string {
     },
   };
 
-  // Combinar características de los tipos seleccionados
   const primaryType = randomTypes[0];
   const secondaryType = randomTypes[1];
 
@@ -182,7 +166,6 @@ function createPokemonPrompt(username: string, types: string[]): string {
   let characteristics = [...typeCharacteristics[primaryType].traits];
 
   if (secondaryType) {
-    // Mezclar personalidades y características
     const secondaryPersonality = typeCharacteristics[secondaryType].personality;
     personality = `${personality} with ${secondaryPersonality} qualities`;
     characteristics = [
@@ -191,7 +174,6 @@ function createPokemonPrompt(username: string, types: string[]): string {
     ];
   }
 
-  // Mantener algunas características basadas en username para personalización adicional
   if (lowerUsername.includes("0x") || lowerUsername.includes("crypto")) {
     characteristics.push("tech-savvy", "digital");
   } else if (
@@ -203,7 +185,6 @@ function createPokemonPrompt(username: string, types: string[]): string {
     characteristics.push("melodic", "rhythmic");
   }
 
-  // Crear prompt detallado
   const typeDescription = secondaryType
     ? `${primaryType}/${secondaryType} dual-type`
     : `${primaryType} type`;
@@ -244,22 +225,17 @@ Please start your response with "Pokemon Name: [NAME]" (where [NAME] is the gene
   return prompt;
 }
 
-// Función para crear filename simple basado solo en username
 function createPokemonFilename(username: string, types: string[], pokemonName: string): string {
   const cleanUsername = username.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
   
-  // Formato simple: username.png
   return `${cleanUsername}.png`;
 }
 
-// Función para extraer el nombre del Pokémon de la respuesta de la IA
 function extractPokemonNameFromResponse(textResponse: string): string | null {
   try {
-    // Buscar el patrón "Pokemon Name: [NAME]" al inicio de la respuesta
     const nameMatch = textResponse.match(/Pokemon Name:\s*([^\n\r]{1,20})/i);
     if (nameMatch && nameMatch[1]) {
       const name = nameMatch[1].trim();
-      // Validar que el nombre esté entre 4 y 8 caracteres
       if (name.length >= 4 && name.length <= 8) {
         return name;
       }
@@ -272,7 +248,6 @@ function extractPokemonNameFromResponse(textResponse: string): string | null {
 
 export async function POST(request: NextRequest) {
   try {
-    // Verificar API key interna para prevenir acceso externo
     const authApiKey = request.headers.get('x-api-key');
     
     const internalApiKey = process.env.INTERNAL_API_KEY;
@@ -293,7 +268,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validaciones de username
     const cleanUsername = username.replace("@", "").trim().toLowerCase();
     
     if (!cleanUsername || cleanUsername.length > 15 || !/^[a-zA-Z0-9_]+$/.test(cleanUsername)) {
@@ -303,7 +277,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Buscar en la base de datos primero
     const existingPokemon = await db.query.pokemon.findFirst({
       where: eq(schema.pokemon.username, cleanUsername),
     });
@@ -311,7 +284,6 @@ export async function POST(request: NextRequest) {
     if (existingPokemon) {
       console.log(`♻️ Using existing Pokemon from DB: ${existingPokemon.pokemonName}`);
 
-      // Crear perfil simple basado en username
       const profile = createProfileFromUsername(cleanUsername);
 
       return NextResponse.json({
@@ -332,13 +304,10 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Crear perfil simple basado en username
     const profile = createProfileFromUsername(cleanUsername);
 
-    // Generar tipos aleatorios
     const randomTypes = getRandomPokemonTypes();
 
-    // Si no existe, verificar API key y generar nuevo
     const apiKey = process.env.GOOGLE_GENAI_API_KEY;
     if (!apiKey) {
       return NextResponse.json(
@@ -350,23 +319,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Crear prompt inteligente basado en el username y tipos (la IA generará el nombre)
     const prompt = createPokemonPrompt(profile.username, randomTypes);
 
     console.log(`🎨 Generating new Pokemon for @${profile.username}:`, prompt);
 
-    // Inicializar Google GenAI
     const ai = new GoogleGenAI({
       apiKey: apiKey,
     });
 
-    // Generar la imagen
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash-image-preview",
       contents: prompt,
     });
 
-    // Procesar la respuesta
     const candidate = response.candidates?.[0];
     if (!candidate || !candidate.content?.parts) {
       return NextResponse.json(
@@ -378,7 +343,6 @@ export async function POST(request: NextRequest) {
     let imageBase64 = "";
     let textResponse = "";
 
-    // Primero extraer el texto para obtener el nombre del Pokemon
     for (const part of candidate.content?.parts || []) {
       if (part.text) {
         textResponse = part.text;
@@ -386,10 +350,9 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Extraer el nombre del Pokemon de la respuesta de la IA
     let pokemonName = extractPokemonNameFromResponse(textResponse);
     if (!pokemonName) {
-      // Fallback al método determinístico si la IA no genera un nombre válido
+
       pokemonName = generatePokemonName(profile.username);
       console.log(`⚠️ Using fallback name: ${pokemonName}`);
     } else {
@@ -400,13 +363,13 @@ export async function POST(request: NextRequest) {
       if (part.inlineData) {
         imageBase64 = part.inlineData?.data || "";
 
-        // Convertir base64 a buffer
+
         const buffer = Buffer.from(imageBase64, "base64");
 
-        // Crear filename con metadata usando el nombre generado por la IA
+
         const filename = createPokemonFilename(profile.username, randomTypes, pokemonName);
 
-        // Subir la imagen a Vercel Blob
+
         const blob = await put(filename, buffer, {
           access: "public",
           contentType: "image/png",
@@ -415,7 +378,7 @@ export async function POST(request: NextRequest) {
         console.log(`✅ Created new Pokemon image: ${filename}`);
         console.log(`📡 Blob URL: ${blob.url}`);
 
-        // Guardar en la base de datos
+
         const newPokemon = await db.insert(schema.pokemon).values({
           username: cleanUsername,
           imageUrl: blob.url,
@@ -440,7 +403,7 @@ export async function POST(request: NextRequest) {
           description: textResponse,
           type1: randomTypes[0],
           type2: randomTypes[1] || null,
-          cached: false, // Newly generated
+          cached: false,
         });
       }
     }
@@ -455,5 +418,5 @@ export async function POST(request: NextRequest) {
       { error: "Failed to generate Pokemon" },
       { status: 500 },
     );
-  }
+  } 
 }

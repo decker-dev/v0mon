@@ -1,7 +1,7 @@
 {
   "name": "v0mon",
   "version": "1.0.0",
-  "description": "Generate personalized Pokémon avatars from X/Twitter usernames using AI",
+  "description": "Generate personalized V0mon avatars from X/Twitter usernames using AI",
   "author": "decker",
   "license": "MIT",
   "homepage": "https://v0mon.vercel.app",

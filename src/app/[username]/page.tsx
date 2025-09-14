@@ -9,7 +9,6 @@ import type { Metadata } from "next";
 import { db, schema } from "@/lib/db/database";
 import { eq } from "drizzle-orm";
 
-// Colores para cada tipo de Pokemon
 const TYPE_COLORS: Record<string, { bg: string; text: string }> = {
   normal: { bg: "bg-gray-400", text: "text-white" },
   fire: { bg: "bg-red-500", text: "text-white" },
@@ -31,9 +30,10 @@ const TYPE_COLORS: Record<string, { bg: string; text: string }> = {
   fairy: { bg: "bg-pink-300", text: "text-black" },
 };
 
-// Función para obtener los colores de un tipo
 function getTypeColors(type: string) {
-  return TYPE_COLORS[type.toLowerCase()] || { bg: "bg-gray-400", text: "text-white" };
+  return (
+    TYPE_COLORS[type.toLowerCase()] || { bg: "bg-gray-400", text: "text-white" }
+  );
 }
 
 interface PokemonResult {
@@ -50,21 +50,19 @@ interface PokemonResult {
   type2?: string;
 }
 
-// Función para obtener el Pokémon desde la base de datos o generar uno nuevo
-async function getPokemon(
-  username: string,
-): Promise<PokemonResult | null> {
+async function getPokemon(username: string): Promise<PokemonResult | null> {
   try {
     const cleanUsername = username.replace("@", "").trim().toLowerCase();
-    
-    // Buscar en la base de datos primero
+
     const existingPokemon = await db.query.pokemon.findFirst({
       where: eq(schema.pokemon.username, cleanUsername),
     });
 
     if (existingPokemon) {
-      console.log(`♻️ Found existing Pokemon in DB: ${existingPokemon.pokemonName}`);
-      
+      console.log(
+        `♻️ Found existing Pokemon in DB: ${existingPokemon.pokemonName}`,
+      );
+
       return {
         imageUrl: existingPokemon.imageUrl,
         pokemonName: existingPokemon.pokemonName,
@@ -79,7 +77,6 @@ async function getPokemon(
       };
     }
 
-    // Si no existe en la base de datos, generar uno nuevo usando la API
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
     const response = await fetch(`${baseUrl}/api/generate-pokemon`, {
@@ -89,10 +86,9 @@ async function getPokemon(
         "x-api-key": process.env.INTERNAL_API_KEY || "",
       },
       body: JSON.stringify({ username: cleanUsername }),
-      // Cachear la respuesta para ISR
       next: {
         tags: [`pokemon-${cleanUsername}`],
-        revalidate: false, // No revalidar automáticamente, mantener estático
+        revalidate: false,
       },
     });
 
@@ -110,17 +106,15 @@ async function getPokemon(
   }
 }
 
-// Generar metadata dinámico para Open Graph
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ username: string }>;
 }): Promise<Metadata> {
   const { username } = await params;
-  
-  // Obtener el Pokémon para obtener la información
+
   const pokemonResult = await getPokemon(username);
-  
+
   if (!pokemonResult) {
     return {
       title: "Pokemon not found | v0mon",
@@ -129,12 +123,12 @@ export async function generateMetadata({
   }
 
   const title = `${pokemonResult.pokemonName} | @${username} | v0mon`;
-  const description = pokemonResult.description || 
+  const description =
+    pokemonResult.description ||
     `Meet ${pokemonResult.pokemonName}, a unique Pokemon created for @${username}!`;
-  
-  // Construir la URL de la imagen OG personalizada (solo necesita username)
+
   const ogImageUrl = `https://v0mon.vercel.app/api/og?username=${encodeURIComponent(username)}`;
-  
+
   return {
     title,
     description,
@@ -167,7 +161,6 @@ export async function generateMetadata({
   };
 }
 
-// Esta función se ejecuta en build time y cuando se visita por primera vez
 export default async function PokemonPage({
   params,
 }: {
@@ -177,7 +170,6 @@ export default async function PokemonPage({
 
   console.log(`🎮 Generating static page for: ${username}`);
 
-  // Obtener el Pokémon desde la base de datos o generar uno nuevo
   const pokemonResult = await getPokemon(username);
 
   if (!pokemonResult) {
@@ -186,7 +178,6 @@ export default async function PokemonPage({
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <header className="p-6 flex items-center justify-between">
         <Link href="/">
           <Button
@@ -203,23 +194,19 @@ export default async function PokemonPage({
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="px-6 pb-12">
         <div className="max-w-2xl mx-auto">
-          {/* User Handle */}
           <div className="text-center mb-8 animate-fade-in-up">
             <h2 className="text-3xl font-bold text-primary mb-2">
               @{username}
             </h2>
             <p className="text-muted-foreground">
-              Your Pokemon companion has been generated!
+              Your V0mon companion has been generated!
             </p>
           </div>
 
-          {/* Pokemon Card */}
           <Card className="p-8 bg-card border-border animate-fade-in-up">
             <div className="text-center space-y-6">
-              {/* Pokemon Image */}
               <div className="relative">
                 <Image
                   src={pokemonResult.imageUrl}
@@ -231,21 +218,25 @@ export default async function PokemonPage({
                 />
               </div>
 
-              {/* Pokemon Info */}
               <div className="space-y-4">
                 <h3 className="text-4xl font-bold">
                   {pokemonResult.pokemonName}
                 </h3>
-                {/* Type Badges */}
                 <div className="flex gap-2 justify-center">
                   {pokemonResult.type1 && (
-                    <div className={`inline-block px-4 py-2 rounded-full text-sm font-medium ${getTypeColors(pokemonResult.type1).bg} ${getTypeColors(pokemonResult.type1).text}`}>
-                      {pokemonResult.type1.charAt(0).toUpperCase() + pokemonResult.type1.slice(1)}
+                    <div
+                      className={`inline-block px-4 py-2 rounded-full text-sm font-medium ${getTypeColors(pokemonResult.type1).bg} ${getTypeColors(pokemonResult.type1).text}`}
+                    >
+                      {pokemonResult.type1.charAt(0).toUpperCase() +
+                        pokemonResult.type1.slice(1)}
                     </div>
                   )}
                   {pokemonResult.type2 && (
-                    <div className={`inline-block px-4 py-2 rounded-full text-sm font-medium ${getTypeColors(pokemonResult.type2).bg} ${getTypeColors(pokemonResult.type2).text}`}>
-                      {pokemonResult.type2.charAt(0).toUpperCase() + pokemonResult.type2.slice(1)}
+                    <div
+                      className={`inline-block px-4 py-2 rounded-full text-sm font-medium ${getTypeColors(pokemonResult.type2).bg} ${getTypeColors(pokemonResult.type2).text}`}
+                    >
+                      {pokemonResult.type2.charAt(0).toUpperCase() +
+                        pokemonResult.type2.slice(1)}
                     </div>
                   )}
                 </div>
@@ -258,9 +249,8 @@ export default async function PokemonPage({
             </div>
           </Card>
 
-          {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
-            <ShareButton 
+            <ShareButton
               username={username}
               pokemonName={pokemonResult.pokemonName}
               description={pokemonResult.description}
@@ -271,15 +261,12 @@ export default async function PokemonPage({
               </Button>
             </Link>
           </div>
-
         </div>
       </main>
     </div>
   );
 }
 
-// Configurar ISR - NO revalidar automáticamente (mantener estático para siempre)
-export const revalidate = false; // Mantener estático permanentemente
+export const revalidate = false;
 
-// Permitir generar páginas dinámicamente para usernames no pre-generados
 export const dynamicParams = true;

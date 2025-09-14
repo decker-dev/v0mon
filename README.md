@@ -1,15 +1,15 @@
-# 🎮 v0mon - Pokémon Avatar Generator
+# 🎮 v0mon - V0mon Avatar Generator
 
-Transform any X/Twitter username into a unique, AI-generated Pokémon avatar! v0mon uses Google's Gemini AI to create personalized Pokémon creatures based on usernames, complete with custom types, names, and descriptions.
+Transform any X/Twitter username into a unique, AI-generated V0mon avatar! v0mon uses Google's Gemini AI to create personalized V0mon creatures based on usernames, complete with custom types, names, and descriptions.
 
 ![v0mon Banner](https://v0mon.vercel.app/api/og?username=example)
 
 ## ✨ Features
 
-- **AI-Powered Generation**: Uses Google Gemini 2.5 Flash to create unique Pokémon artwork
-- **Smart Type System**: Assigns 1-2 Pokémon types with personality traits matching the username
+- **AI-Powered Generation**: Uses Google Gemini 2.5 Flash to create unique V0mon artwork
+- **Smart Type System**: Assigns 1-2 V0mon types with personality traits matching the username
 - **Creative Naming**: Generates Pokemon-style names inspired by the input username
-- **Persistent Storage**: Saves generated Pokémon to prevent regeneration (one per username)
+- **Persistent Storage**: Saves generated V0mon to prevent regeneration (one per username)
 - **Social Sharing**: Built-in X/Twitter sharing functionality
 - **Open Graph Support**: Custom OG images for social media previews
 - **Responsive Design**: Beautiful UI that works on all devices
@@ -123,15 +123,15 @@ CREATE TABLE pokemon (
 ## 🎨 How It Works
 
 1. **Username Input**: User enters an X/Twitter username
-2. **Type Generation**: Algorithm assigns 1-2 random Pokémon types
+2. **Type Generation**: Algorithm assigns 1-2 random V0mon types
 3. **AI Prompt Creation**: Builds a detailed prompt incorporating:
    - Username characteristics
    - Type-specific personality traits
    - Visual design requirements
-4. **Image Generation**: Google Gemini creates the Pokémon artwork
-5. **Name Extraction**: AI generates a creative Pokémon name
+4. **Image Generation**: Google Gemini creates the V0mon artwork
+5. **Name Extraction**: AI generates a creative V0mon name
 6. **Storage**: Image stored in Vercel Blob, metadata in PostgreSQL
-7. **Sharing**: Users can share their Pokémon on social media
+7. **Sharing**: Users can share their V0mon on social media
 
 ## 📁 Project Structure
 
@@ -208,7 +208,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- [Pokémon](https://www.pokemon.com/) for the inspiration
+- [V0mon](https://www.pokemon.com/) for the inspiration
 - [Google AI](https://ai.google.dev/) for the Gemini model
 - [Vercel](https://vercel.com/) for hosting and storage
 - [shadcn/ui](https://ui.shadcn.com/) for the beautiful components
@@ -221,4 +221,4 @@ If you encounter any issues or have questions, please [open an issue](https://gi
 
 **Made with ❤️ by [decker](https://github.com/decker-dev)**
 
-*Generate your Pokémon today at [v0mon.vercel.app](https://v0mon.vercel.app)!*
+*Generate your V0mon today at [v0mon.vercel.app](https://v0mon.vercel.app)!*

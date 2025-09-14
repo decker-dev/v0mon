@@ -1,10 +1,7 @@
 import { ImageResponse } from "next/og";
-// App router includes @vercel/og.
-// No need to install it.
 
 export const runtime = "edge";
 
-// Colores para cada tipo de Pokemon (versiones hex para OG)
 const TYPE_COLORS: Record<string, string> = {
   normal: "#A8A878",
   fire: "#F08030",
@@ -26,18 +23,15 @@ const TYPE_COLORS: Record<string, string> = {
   fairy: "#EE99AC",
 };
 
-// Función para obtener el color de un tipo
 function getTypeColor(type: string): string {
   return TYPE_COLORS[type.toLowerCase()] || "#A8A878";
 }
 
 
-// Función para obtener el Pokémon usando la API (compatible con edge runtime)
 async function getPokemonData(username: string) {
   try {
     const cleanUsername = username.replace("@", "").trim();
     
-    // Usar la API que ya maneja la lógica de BD y generación
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
     
     const response = await fetch(`${baseUrl}/api/generate-pokemon`, {
@@ -65,13 +59,11 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const username = searchParams.get("username") || "user";
     
-    // Obtener datos reales del Pokemon usando la API
     const pokemonData = await getPokemonData(username);
     
     const pokemonName = pokemonData?.pokemonName || `${username}mon`;
     const imageUrl = pokemonData?.imageUrl;
 
-    // Si no hay imagen, mostrar mensaje simple
     if (!imageUrl) {
       return new ImageResponse(
         (
@@ -98,7 +90,6 @@ export async function GET(request: Request) {
       );
     }
 
-    // Mostrar la imagen del Pokemon con información completa
     return new ImageResponse(
       (
         <div
@@ -110,7 +101,6 @@ export async function GET(request: Request) {
             backgroundColor: "#1a1a1a",
           }}
         >
-          {/* Imagen de fondo borrosa */}
           <img
             src={imageUrl}
             alt=""
@@ -127,7 +117,6 @@ export async function GET(request: Request) {
             }}
           />
           
-          {/* Contenido principal */}
           <div
             style={{
               position: "relative",
@@ -139,7 +128,6 @@ export async function GET(request: Request) {
               padding: "60px",
             }}
           >
-            {/* Lado izquierdo - Imagen del Pokemon (más grande) */}
             <div
               style={{
                 display: "flex",
@@ -162,7 +150,6 @@ export async function GET(request: Request) {
               />
             </div> 
 
-            {/* Lado derecho - Información (más compacto) */}
             <div
               style={{
                 display: "flex",
@@ -174,7 +161,6 @@ export async function GET(request: Request) {
                 padding: "40px",
               }}
             >
-              {/* Nombre del Pokemon */}
               <h1
                 style={{
                   fontSize: "64px",
@@ -188,7 +174,6 @@ export async function GET(request: Request) {
                 {pokemonName}
               </h1>
 
-              {/* Username */}
               <p
                 style={{
                   fontSize: "24px",
@@ -200,7 +185,6 @@ export async function GET(request: Request) {
                 @{username}
               </p>
 
-              {/* Badges de tipos */}
               <div
                 style={{
                   display: "flex",
@@ -238,7 +222,6 @@ export async function GET(request: Request) {
                 )}
               </div>
 
-              {/* Logo/Brand */}
               <div
                 style={{
                   fontSize: "32px",
